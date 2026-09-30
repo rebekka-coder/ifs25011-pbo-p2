@@ -33,8 +33,8 @@ public class ContactUseCase {
     }
 
     /**
-     * Mengubah nama, telepon, dan/atau email kontak.
-     * Parameter {@code null} berarti field tersebut tidak diubah.
+     * Mengubah nama, telepon, dan/atau email kontak dengan mengganti entity lama
+     * dengan salinan baru. Parameter {@code null} berarti field tersebut tidak diubah.
      *
      * @return true jika kontak ditemukan dan diperbarui
      */
@@ -44,20 +44,19 @@ public class ContactUseCase {
             return false;
         }
 
-        Contact contact = found.get();
+        Contact updated = found.get();
 
         if (name != null) {
-            contact.changeName(name);
+            updated = updated.withName(name);
         }
         if (phone != null) {
-            contact.changePhone(phone);
+            updated = updated.withPhone(phone);
         }
         if (email != null) {
-            contact.changeEmail(email);
+            updated = updated.withEmail(email);
         }
 
-        contactRepository.update(contact);
-        return true;
+        return contactRepository.update(updated);
     }
 
     /** Mencari kontak yang namanya mengandung kata kunci (case-insensitive). */

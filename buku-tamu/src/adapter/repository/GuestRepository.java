@@ -18,8 +18,8 @@ public class GuestRepository implements IGuestRepository {
 
     @Override
     public List<Guest> findAll() {
-        // Salinan defensif agar data internal tidak bisa diubah dari luar
-        return new ArrayList<>(data);
+        // Salinan list yang tidak bisa dimodifikasi; Guest sendiri immutable
+        return List.copyOf(data);
     }
 
     @Override

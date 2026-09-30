@@ -61,6 +61,9 @@ public class FinanceView {
         }
 
         String strAmount = InputUtil.input("Jumlah");
+        if (strAmount.equals("x")) {
+            return;
+        }
 
         Long amount = parseAmount(strAmount);
         if (amount == null) {
@@ -68,7 +71,12 @@ public class FinanceView {
             return;
         }
 
-        presenter.showAddSuccess(financeUseCase.addTransaction(description, amount, type));
+        try {
+            presenter.showAddSuccess(financeUseCase.addTransaction(description, amount, type));
+        } catch (IllegalArgumentException e) {
+            // Aturan domain (jumlah > 0) ditegakkan oleh use case; view hanya menampilkan pesannya
+            presenter.showInvalidAmount();
+        }
     }
 
     /** Form cari transaksi berdasarkan keterangan. */
@@ -125,11 +133,10 @@ public class FinanceView {
         }
     }
 
-    /** Mengonversi input menjadi jumlah; null jika bukan angka atau tidak lebih dari 0. */
+    /** Mengonversi input menjadi angka; null jika formatnya bukan angka (aturan nilai ada di use case). */
     private Long parseAmount(String value) {
         try {
-            long amount = Long.parseLong(value.trim());
-            return amount > 0 ? amount : null;
+            return Long.parseLong(value.trim());
         } catch (NumberFormatException e) {
             return null;
         }

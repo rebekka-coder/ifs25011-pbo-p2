@@ -2,26 +2,47 @@ package domain.entity;
 
 /**
  * Entity inti yang merepresentasikan satu barang di inventaris.
- * Berada di layer domain — bebas dari urusan tampilan maupun penyimpanan.
+ * Bersifat immutable: perubahan data dilakukan dengan membuat salinan baru
+ * lewat method {@code withXxx}, sehingga instance aman dibagikan antar-layer.
  */
 public class Item {
-    /** ID unik barang, tidak boleh diubah setelah dibuat. */
+    /** ID unik barang. */
     private final int id;
 
     /** Nama barang. */
-    private String name;
+    private final String name;
 
-    /** Jumlah stok. */
-    private int quantity;
+    /** Jumlah stok (selalu lebih dari 0). */
+    private final int quantity;
 
     /** Kategori barang. */
-    private String category;
+    private final String category;
 
+    /**
+     * @throws IllegalArgumentException jika jumlah stok tidak lebih dari 0
+     */
     public Item(int id, String name, int quantity, String category) {
+        requireValidQuantity(quantity);
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.category = category;
+    }
+
+    /** Aturan domain: jumlah stok harus lebih dari 0. */
+    public static boolean isValidQuantity(int quantity) {
+        return quantity > 0;
+    }
+
+    /**
+     * Memastikan jumlah stok valid.
+     *
+     * @throws IllegalArgumentException jika jumlah stok tidak lebih dari 0
+     */
+    public static void requireValidQuantity(int quantity) {
+        if (!isValidQuantity(quantity)) {
+            throw new IllegalArgumentException("Jumlah stok harus lebih dari 0");
+        }
     }
 
     public int getId() {
@@ -40,18 +61,8 @@ public class Item {
         return category;
     }
 
-    /** Mengubah nama barang. */
-    public void changeName(String name) {
-        this.name = name;
-    }
-
-    /** Mengubah jumlah stok. */
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    /** Mengubah kategori barang. */
-    public void changeCategory(String category) {
-        this.category = category;
+    /** Mengembalikan salinan barang ini dengan jumlah stok yang baru. */
+    public Item withQuantity(int quantity) {
+        return new Item(id, name, quantity, category);
     }
 }

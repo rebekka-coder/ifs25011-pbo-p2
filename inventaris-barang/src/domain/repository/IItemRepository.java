@@ -24,6 +24,11 @@ public interface IItemRepository {
     /** Menghapus barang berdasarkan ID. Mengembalikan true jika berhasil. */
     boolean deleteById(int id);
 
-    /** Menyimpan perubahan pada barang yang sudah ada. */
-    void update(Item item);
+    /**
+     * Mengganti data yang tersimpan dengan versi baru yang ber-ID sama.
+     * Entity bersifat immutable, sehingga perubahan dilakukan dengan menimpa instance lama.
+     *
+     * @return true jika data dengan ID tersebut ditemukan dan diganti
+     */
+    boolean update(Item item);
 }

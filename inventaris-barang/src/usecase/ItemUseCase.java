@@ -22,8 +22,18 @@ public class ItemUseCase {
         return itemRepository.findAll();
     }
 
-    /** Menambahkan barang baru dan mengembalikan entity yang tersimpan. */
+    /** Memeriksa apakah jumlah stok memenuhi aturan domain (lebih dari 0). */
+    public boolean isValidQuantity(int quantity) {
+        return Item.isValidQuantity(quantity);
+    }
+
+    /**
+     * Menambahkan barang baru dan mengembalikan entity yang tersimpan.
+     *
+     * @throws IllegalArgumentException jika jumlah stok tidak lebih dari 0
+     */
     public Item addItem(String name, int quantity, String category) {
+        Item.requireValidQuantity(quantity);
         return itemRepository.save(name, quantity, category);
     }
 
@@ -33,25 +43,26 @@ public class ItemUseCase {
     }
 
     /**
-     * Mengubah stok barang.
+     * Mengubah stok barang dengan mengganti entity lama dengan salinan baru.
      * Parameter {@code null} berarti stok tidak diubah.
      *
      * @return true jika barang ditemukan dan diperbarui
+     * @throws IllegalArgumentException jika jumlah stok diberikan tetapi tidak lebih dari 0
      */
     public boolean updateStock(int id, Integer quantity) {
+        if (quantity != null) {
+            Item.requireValidQuantity(quantity); // validasi dulu sebelum mengakses repository
+        }
+
         Optional<Item> found = itemRepository.findById(id);
         if (found.isEmpty()) {
             return false;
         }
 
         Item item = found.get();
+        Item updated = (quantity != null) ? item.withQuantity(quantity) : item;
 
-        if (quantity != null) {
-            item.changeQuantity(quantity);
-        }
-
-        itemRepository.update(item);
-        return true;
+        return itemRepository.update(updated);
     }
 
     /** Mencari barang yang namanya mengandung kata kunci (case-insensitive). */

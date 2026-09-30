@@ -64,7 +64,7 @@ public class ItemView {
         String strQuantity = InputUtil.input("Jumlah");
 
         Integer quantity = parseQuantity(strQuantity);
-        if (quantity == null) {
+        if (quantity == null || !itemUseCase.isValidQuantity(quantity)) {
             presenter.showInvalidQuantity();
             return;
         }
@@ -97,7 +97,7 @@ public class ItemView {
         Integer quantity = null;
         if (!strQuantity.isBlank()) {
             quantity = parseQuantity(strQuantity);
-            if (quantity == null) {
+            if (quantity == null || !itemUseCase.isValidQuantity(quantity)) {
                 presenter.showInvalidQuantity();
                 return;
             }
@@ -165,11 +165,10 @@ public class ItemView {
         }
     }
 
-    /** Mengonversi input menjadi jumlah stok; null jika bukan angka atau tidak lebih dari 0. */
+    /** Mengonversi input menjadi angka; null jika formatnya bukan angka (aturan nilai ada di use case). */
     private Integer parseQuantity(String value) {
         try {
-            int quantity = Integer.parseInt(value.trim());
-            return quantity > 0 ? quantity : null;
+            return Integer.parseInt(value.trim());
         } catch (NumberFormatException e) {
             return null;
         }

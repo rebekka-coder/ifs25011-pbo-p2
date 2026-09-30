@@ -33,8 +33,8 @@ public class ActivityUseCase {
     }
 
     /**
-     * Mengubah judul, hari, dan/atau waktu kegiatan.
-     * Parameter {@code null} berarti field tersebut tidak diubah.
+     * Mengubah judul, hari, dan/atau waktu kegiatan dengan mengganti entity lama
+     * dengan salinan baru. Parameter {@code null} berarti field tersebut tidak diubah.
      *
      * @return true jika kegiatan ditemukan dan diperbarui
      */
@@ -44,20 +44,19 @@ public class ActivityUseCase {
             return false;
         }
 
-        Activity activity = found.get();
+        Activity updated = found.get();
 
         if (title != null) {
-            activity.changeTitle(title);
+            updated = updated.withTitle(title);
         }
         if (day != null) {
-            activity.changeDay(day);
+            updated = updated.withDay(day);
         }
         if (time != null) {
-            activity.changeTime(time);
+            updated = updated.withTime(time);
         }
 
-        activityRepository.update(activity);
-        return true;
+        return activityRepository.update(updated);
     }
 
     /** Mencari kegiatan yang judulnya mengandung kata kunci (case-insensitive). */

@@ -19,8 +19,8 @@ public class TransactionRepository implements ITransactionRepository {
 
     @Override
     public List<Transaction> findAll() {
-        // Salinan defensif agar data internal tidak bisa diubah dari luar
-        return new ArrayList<>(data);
+        // Salinan list yang tidak bisa dimodifikasi; Transaction sendiri immutable
+        return List.copyOf(data);
     }
 
     @Override

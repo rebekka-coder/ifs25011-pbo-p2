@@ -24,6 +24,11 @@ public interface IActivityRepository {
     /** Menghapus kegiatan berdasarkan ID. Mengembalikan true jika berhasil. */
     boolean deleteById(int id);
 
-    /** Menyimpan perubahan pada kegiatan yang sudah ada. */
-    void update(Activity activity);
+    /**
+     * Mengganti data yang tersimpan dengan versi baru yang ber-ID sama.
+     * Entity bersifat immutable, sehingga perubahan dilakukan dengan menimpa instance lama.
+     *
+     * @return true jika data dengan ID tersebut ditemukan dan diganti
+     */
+    boolean update(Activity activity);
 }

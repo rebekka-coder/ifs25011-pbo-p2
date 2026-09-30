@@ -19,8 +19,18 @@ public class FinanceUseCase {
         return transactionRepository.findAll();
     }
 
-    /** Menambahkan transaksi baru dan mengembalikan entity yang tersimpan. */
+    /** Memeriksa apakah jumlah memenuhi aturan domain (lebih dari 0). */
+    public boolean isValidAmount(long amount) {
+        return Transaction.isValidAmount(amount);
+    }
+
+    /**
+     * Menambahkan transaksi baru dan mengembalikan entity yang tersimpan.
+     *
+     * @throws IllegalArgumentException jika jumlah tidak lebih dari 0
+     */
     public Transaction addTransaction(String description, long amount, TransactionType type) {
+        Transaction.requireValidAmount(amount);
         return transactionRepository.save(description, amount, type);
     }
 
@@ -37,12 +47,12 @@ public class FinanceUseCase {
                 .toList();
     }
 
-   /** Mengurutkan transaksi sesuai kriteria {@link SortOption}. */
-   public List<Transaction> sortTransactions(SortOption option) {
-       return transactionRepository.findAll().stream()
-               .sorted(option.comparator())
-               .toList();
-   }
+    /** Mengurutkan transaksi sesuai kriteria {@link SortOption}. */
+    public List<Transaction> sortTransactions(SortOption option) {
+        return transactionRepository.findAll().stream()
+                .sorted(option.comparator())
+                .toList();
+    }
 
     /** Menghitung saldo: total pemasukan dikurangi total pengeluaran. */
     public long getBalance() {

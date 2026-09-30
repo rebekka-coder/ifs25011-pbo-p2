@@ -1,14 +1,19 @@
 package domain.entity;
 
+/**
+ * Entity inti yang merepresentasikan satu tamu.
+ * Bersifat immutable: seluruh field final, sehingga instance aman dibagikan
+ * antar-layer tanpa risiko dimutasi dari luar.
+ */
 public class Guest {
-    /** ID unik tamu, tidak boleh diubah setelah dibuat. */
+    /** ID unik tamu. */
     private final int id;
 
     /** Nama tamu. */
-    private String name;
+    private final String name;
 
     /** Tujuan kunjungan. */
-    private String purpose;
+    private final String purpose;
 
     public Guest(int id, String name, String purpose) {
         this.id = id;
@@ -26,15 +31,5 @@ public class Guest {
 
     public String getPurpose() {
         return purpose;
-    }
-
-    /** Mengubah nama tamu. */
-    public void changeName(String name) {
-        this.name = name;
-    }
-
-    /** Mengubah tujuan kunjungan. */
-    public void changePurpose(String purpose) {
-        this.purpose = purpose;
     }
 }

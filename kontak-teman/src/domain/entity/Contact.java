@@ -2,20 +2,21 @@ package domain.entity;
 
 /**
  * Entity inti yang merepresentasikan satu kontak teman.
- * Berada di layer domain — bebas dari urusan tampilan maupun penyimpanan.
+ * Bersifat immutable: perubahan data dilakukan dengan membuat salinan baru
+ * lewat method {@code withXxx}, sehingga instance aman dibagikan antar-layer.
  */
 public class Contact {
-    /** ID unik kontak, tidak boleh diubah setelah dibuat. */
+    /** ID unik kontak. */
     private final int id;
 
     /** Nama teman. */
-    private String name;
+    private final String name;
 
     /** Nomor telepon. */
-    private String phone;
+    private final String phone;
 
     /** Alamat email. */
-    private String email;
+    private final String email;
 
     public Contact(int id, String name, String phone, String email) {
         this.id = id;
@@ -40,18 +41,18 @@ public class Contact {
         return email;
     }
 
-    /** Mengubah nama kontak. */
-    public void changeName(String name) {
-        this.name = name;
+    /** Mengembalikan salinan kontak ini dengan nama yang baru. */
+    public Contact withName(String name) {
+        return new Contact(id, name, phone, email);
     }
 
-    /** Mengubah nomor telepon kontak. */
-    public void changePhone(String phone) {
-        this.phone = phone;
+    /** Mengembalikan salinan kontak ini dengan nomor telepon yang baru. */
+    public Contact withPhone(String phone) {
+        return new Contact(id, name, phone, email);
     }
 
-    /** Mengubah email kontak. */
-    public void changeEmail(String email) {
-        this.email = email;
+    /** Mengembalikan salinan kontak ini dengan email yang baru. */
+    public Contact withEmail(String email) {
+        return new Contact(id, name, phone, email);
     }
 }

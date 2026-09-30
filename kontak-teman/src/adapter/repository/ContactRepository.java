@@ -18,8 +18,8 @@ public class ContactRepository implements IContactRepository {
 
     @Override
     public List<Contact> findAll() {
-        // Salinan defensif agar data internal tidak bisa diubah dari luar
-        return new ArrayList<>(data);
+        // Salinan list yang tidak bisa dimodifikasi; Contact sendiri immutable
+        return List.copyOf(data);
     }
 
     @Override
@@ -42,9 +42,14 @@ public class ContactRepository implements IContactRepository {
     }
 
     @Override
-    public void update(Contact contact) {
-        // Entity mutable disimpan by-reference sehingga perubahan sudah tercermin.
-        // Method ini tetap ada agar kontrak port valid untuk implementasi lain.
+    public boolean update(Contact contact) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == contact.getId()) {
+                data.set(i, contact);
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Menghasilkan ID unik berikutnya. */

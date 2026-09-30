@@ -24,6 +24,11 @@ public interface IContactRepository {
     /** Menghapus kontak berdasarkan ID. Mengembalikan true jika berhasil. */
     boolean deleteById(int id);
 
-    /** Menyimpan perubahan pada kontak yang sudah ada. */
-    void update(Contact contact);
+    /**
+     * Mengganti data yang tersimpan dengan versi baru yang ber-ID sama.
+     * Entity bersifat immutable, sehingga perubahan dilakukan dengan menimpa instance lama.
+     *
+     * @return true jika data dengan ID tersebut ditemukan dan diganti
+     */
+    boolean update(Contact contact);
 }

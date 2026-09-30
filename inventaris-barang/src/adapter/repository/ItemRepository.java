@@ -18,8 +18,8 @@ public class ItemRepository implements IItemRepository {
 
     @Override
     public List<Item> findAll() {
-        // Salinan defensif agar data internal tidak bisa diubah dari luar
-        return new ArrayList<>(data);
+        // Salinan list yang tidak bisa dimodifikasi; Item sendiri immutable
+        return List.copyOf(data);
     }
 
     @Override
@@ -42,9 +42,14 @@ public class ItemRepository implements IItemRepository {
     }
 
     @Override
-    public void update(Item item) {
-        // Entity mutable disimpan by-reference sehingga perubahan sudah tercermin.
-        // Method ini tetap ada agar kontrak port valid untuk implementasi lain.
+    public boolean update(Item item) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == item.getId()) {
+                data.set(i, item);
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Menghasilkan ID unik berikutnya. */
